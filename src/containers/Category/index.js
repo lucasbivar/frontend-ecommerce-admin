@@ -6,19 +6,31 @@ import {Layout} from "../../components/Layout";
 import {Input} from "../../components/UI/Input";
 
 export const Category = (props) => {
+
   const dispatch = useDispatch();
 
   const [show, setShow] = useState(false);
+
   const handleClose = () => {
     const form = new FormData();
+    if (categoryName === "") {
+      alert('Category name is required');
+      setShow(false);
+      return;
+    
+    }
     form.append("name", categoryName);
     form.append("parentId", parentCategoryId);
     form.append("categoryImage", categoryImage);
-    console.log(form);
+   
     dispatch(addCategory(form));
-
+    setCategoryName('');
+    setParentCategoryId('');
     setShow(false);
+    window.location.reload();
+
   };
+
   const handleShow = () => setShow(true);
 
   const [categoryName, setCategoryName] = useState("");
