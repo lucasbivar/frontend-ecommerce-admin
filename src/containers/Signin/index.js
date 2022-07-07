@@ -10,15 +10,10 @@ export const Signin = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  
   const auth = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if(!auth.authenticate){
-      dispatch(isUserLoggedIn());
-    }
-  }, []);
 
   const userLogin = (e) => {
     e.preventDefault();

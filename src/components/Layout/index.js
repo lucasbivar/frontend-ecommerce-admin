@@ -7,7 +7,7 @@ export const Layout = (props) => {
   return(
     <>
       <Header />
-      <Container>
+      <Container fluid>
         {props.children}
       </Container> 
     </>
