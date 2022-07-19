@@ -1,9 +1,10 @@
-import React, { useEffect, useState} from 'react'
-import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
+import React, { useState } from 'react'
+import { Container, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCategory, getAllCategory } from '../../actions';
-import {Layout} from "../../components/Layout";
-import {Input} from "../../components/UI/Input";
+import { addCategory } from '../../actions';
+import { Layout } from "../../components/Layout";
+import { Input } from "../../components/UI/Input";
+import Modal from "../../components/UI/Modal";
 
 export const Category = (props) => {
 
@@ -17,12 +18,12 @@ export const Category = (props) => {
       alert('Category name is required');
       setShow(false);
       return;
-    
+
     }
     form.append("name", categoryName);
     form.append("parentId", parentCategoryId);
     form.append("categoryImage", categoryImage);
-   
+
     dispatch(addCategory(form));
     setCategoryName('');
     setParentCategoryId('');
@@ -37,19 +38,13 @@ export const Category = (props) => {
   const [parentCategoryId, setParentCategoryId] = useState("");
   const [categoryImage, setCategoryImage] = useState("");
 
-
-  useEffect(() => {
-    dispatch(getAllCategory());
-    console.log(category.categories)
-  }, []);
-
   const category = useSelector(state => state.category);
-  
+
   const renderCategories = (categories) => {
 
     let myCategories = [];
 
-    for(let category of categories){
+    for (let category of categories) {
       myCategories.push(
         <li key={category.name}>
           {category.name}
@@ -62,9 +57,9 @@ export const Category = (props) => {
   };
 
   const createCategoryList = (categories, options = []) => {
-    for(let category of categories){
-      options.push({value: category._id, name: category.name});
-      if(category.children.length > 0){
+    for (let category of categories) {
+      options.push({ value: category._id, name: category.name });
+      if (category.children.length > 0) {
         createCategoryList(category.children, options);
       }
     }
@@ -75,12 +70,12 @@ export const Category = (props) => {
     setCategoryImage(e.target.files[0]);
   };
 
-  return(
+  return (
     <Layout sidebar>
       <Container>
         <Row>
           <Col md={12}>
-            <div style={{display: "flex", justifyContent: "space-between"}}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <h3>
                 Category
               </h3>
@@ -98,30 +93,20 @@ export const Category = (props) => {
           </Col>
         </Row>
       </Container>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add New Category</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Input 
-            value={categoryName}
-            placeholder={`Category Name`}
-            onChange={(e) => setCategoryName(e.target.value)}
-          />
-          <select className='form-control' value={parentCategoryId} onChange={(e) => setParentCategoryId(e.target.value)}>
-            <option>Select Category</option>
-            {
-              createCategoryList(category.categories).map(option =>
-                <option key={option.value} value={option.value}>{option.name}</option>)
-            }
-          </select>
-          <input type="file" name="categoryImage" onChange={handleCategoryImage} />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+      <Modal modalTitle={"Add New Category"} show={show} handleClose={handleClose}>
+        <Input
+          value={categoryName}
+          placeholder={`Category Name`}
+          onChange={(e) => setCategoryName(e.target.value)}
+        />
+        <select className='form-control' value={parentCategoryId} onChange={(e) => setParentCategoryId(e.target.value)}>
+          <option>Select Category</option>
+          {
+            createCategoryList(category.categories).map(option =>
+              <option key={option.value} value={option.value}>{option.name}</option>)
+          }
+        </select>
+        <input type="file" name="categoryImage" onChange={handleCategoryImage} />
       </Modal>
     </Layout>
   );
